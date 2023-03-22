@@ -375,7 +375,7 @@ void bsp_initialize(void)
     RT_CHECK(drv_sdio_init());
 
     /* fdcan driver init */
-    // RT_CHECK(drv_fdcan_init());
+    RT_CHECK(drv_fdcan_init());
 
     /* fram init */
     RT_CHECK(drv_ramtron_init("spi4_dev1"));
@@ -403,7 +403,7 @@ void bsp_initialize(void)
     FMT_CHECK(advertise_sensor_airspeed(0));
 #else
     /* init onboard sensors */
-    // RT_CHECK(drv_icm42688_init("spi1_dev1", "gyro0", "accel0", 0));
+    RT_CHECK(drv_icm42688_init("spi1_dev1", "gyro0", "accel0", 0));
     RT_CHECK(drv_ms5611_init("spi1_dev2", "barometer"));
 
     // // drv_ist8310_init("i2c1_dev1", "mag0");

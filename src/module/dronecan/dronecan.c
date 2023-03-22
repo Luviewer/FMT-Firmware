@@ -90,7 +90,7 @@ static bool shouldAcceptTransfer(const CanardInstance* ins,
     if (transfer_type == CanardTransferTypeBroadcast) {
         switch (data_type_id) {
         case UAVCAN_PROTOCOL_DYNAMIC_NODE_ID_ALLOCATION_ID:
-            printf("UAVCAN_PROTOCOL_DYNAMIC_NODE_ID_ALLOCATION_ID\n");
+            // printf("UAVCAN_PROTOCOL_DYNAMIC_NODE_ID_ALLOCATION_ID\n");
             *out_data_type_signature = UAVCAN_PROTOCOL_DYNAMIC_NODE_ID_ALLOCATION_SIGNATURE;
 
             return true;

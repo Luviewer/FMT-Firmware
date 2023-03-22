@@ -12,9 +12,9 @@ void dronecan_dynamic_allocation_id(const CanardInstance* ins, CanardRxTransfer*
         uavcan_protocol_dynamic_node_id_Allocation_decode(transfer, &dynamic_node_id_allocation_msg);
 
         if (dynamic_node_id_allocation_msg.first_part_of_unique_id == true) {
-            // printf("dynamic_node_id_allocation_msg.node_id=%d\n", dynamic_node_id_allocation_msg.node_id);
-            // printf("dynamic_node_id_allocation_msg.first_part_of_unique_id=%d\n", dynamic_node_id_allocation_msg.first_part_of_unique_id);
-            // printf("dynamic_node_id_allocation_msg.unique_id.len=%d\n", dynamic_node_id_allocation_msg.unique_id.len);
+            printf("dynamic_node_id_allocation_msg.node_id=%d\n", dynamic_node_id_allocation_msg.node_id);
+            printf("dynamic_node_id_allocation_msg.first_part_of_unique_id=%d\n", dynamic_node_id_allocation_msg.first_part_of_unique_id);
+            printf("dynamic_node_id_allocation_msg.unique_id.len=%d\n", dynamic_node_id_allocation_msg.unique_id.len);
 
             memcpy(unique_id, dynamic_node_id_allocation_msg.unique_id.data, 6);
             dynamic_node_id_allocation_msg.first_part_of_unique_id = 0;
@@ -39,9 +39,9 @@ void dronecan_dynamic_allocation_id(const CanardInstance* ins, CanardRxTransfer*
         uavcan_protocol_dynamic_node_id_Allocation_decode(transfer, &dynamic_node_id_allocation_msg);
 
         if (dynamic_node_id_allocation_msg.first_part_of_unique_id == false) {
-            // printf("dynamic_node_id_allocation_msg.node_id=%d\n", dynamic_node_id_allocation_msg.node_id);
-            // printf("dynamic_node_id_allocation_msg.first_part_of_unique_id=%d\n", dynamic_node_id_allocation_msg.first_part_of_unique_id);
-            // printf("dynamic_node_id_allocation_msg.unique_id.len=%d\n", dynamic_node_id_allocation_msg.unique_id.len);
+            printf("dynamic_node_id_allocation_msg.node_id=%d\n", dynamic_node_id_allocation_msg.node_id);
+            printf("dynamic_node_id_allocation_msg.first_part_of_unique_id=%d\n", dynamic_node_id_allocation_msg.first_part_of_unique_id);
+            printf("dynamic_node_id_allocation_msg.unique_id.len=%d\n", dynamic_node_id_allocation_msg.unique_id.len);
 
             memcpy(unique_id + 6, dynamic_node_id_allocation_msg.unique_id.data, 6);
             memcpy(dynamic_node_id_allocation_msg.unique_id.data, unique_id, 12);
