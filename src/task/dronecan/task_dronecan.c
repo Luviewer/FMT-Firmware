@@ -45,13 +45,13 @@ fmt_err_t task_dronecan_init(void)
     return FMT_EOK;
 }
 
-TASK_EXPORT __fmt_task_desc = {
-    .name = "droencan",
-    .init = task_dronecan_init,
-    .entry = task_dronecan_entry,
-    .priority = DRONECAN_THREAD_PRIORITY,
-    .auto_start = true,
-    .stack_size = 1024 * 10,
-    .param = NULL,
-    .dependency = NULL
-};
+// TASK_EXPORT __fmt_task_desc = {
+//     .name = "droencan",
+//     .init = task_dronecan_init,
+//     .entry = task_dronecan_entry,
+//     .priority = DRONECAN_THREAD_PRIORITY,
+//     .auto_start = true,
+//     .stack_size = 1024 * 10,
+//     .param = NULL,
+//     .dependency = NULL
+// };
