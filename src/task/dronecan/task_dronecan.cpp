@@ -9,7 +9,6 @@ void task_dronecan_entry(void* parameter)
     static uint32_t time_start = 0;
     uint32_t time_now;
     uint32_t timestamp;
-
     static uint16_t cnt;
 
     while (1) {

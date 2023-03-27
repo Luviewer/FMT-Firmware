@@ -5,7 +5,7 @@ static uint8_t alloc_step = 0;
 static struct uavcan_protocol_dynamic_node_id_Allocation dynamic_node_id_allocation_msg;
 static uint8_t allocation_request[UAVCAN_PROTOCOL_DYNAMIC_NODE_ID_ALLOCATION_MAX_SIZE];
 
-void dronecan_dynamic_allocation_id(const CanardInstance* ins, CanardRxTransfer* transfer, uint8_t master_id, uint8_t slave_id)
+void dronecan_dynamic_allocation_id(CanardInstance* ins, CanardRxTransfer* transfer, uint8_t master_id, uint8_t slave_id)
 {
     switch (alloc_step) {
     case 0:

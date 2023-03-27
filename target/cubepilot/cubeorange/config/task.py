@@ -6,7 +6,7 @@ TASKS = [
     'fmtio/*.c',
     'status/*.c',
     'vehicle/multicopter/*.c',
-    'dronecan/*.c',
+    'dronecan/*.cpp',
 
 ]
 

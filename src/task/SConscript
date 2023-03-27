@@ -7,6 +7,9 @@ src = []
 for f in bl.TASKS:
     src += Glob(f)
 
+if GetDepend(['RT_USING_CPLUSPLUS']):
+    src += Glob('*.cpp')
+
 inc = []
 for d in bl.TASKS_CPPPATH:
     inc += [cwd + '/' + d]
