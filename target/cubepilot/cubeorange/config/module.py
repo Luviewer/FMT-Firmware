@@ -22,6 +22,7 @@ MODULES = [
     'task_manager/*.c',
     'pmu/*.c',
     'dronecan/*.cpp',
+    'uavcan_rtt/*.cpp',
 
 ]
 

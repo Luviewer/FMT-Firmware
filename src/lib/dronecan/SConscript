@@ -8,7 +8,7 @@ src = Glob('libcanard/*.c')
 src += Glob('dsdl/src/*.c')
 src += Glob('libuavcan/src/*.cpp')
 
-CPPPATH = [cwd + '/libcanard',cwd + '/libuavcan/include', cwd + '/dsdl/include']
+CPPPATH = [cwd + '/libcanard',cwd + '/libuavcan/include',cwd + '/libuavcan/include/dsdlc_generated', cwd + '/dsdl/include']
 
 
 group = DefineGroup('dronecan', src, depend = [''], CPPPATH = CPPPATH)
