@@ -29,7 +29,7 @@ static int auto_cmd_echo(void* param)
     mcn_copy_from_hub((McnHub*)param, &auto_cmd);
 
     printf("timestamp:%u frame:%d\n", auto_cmd.timestamp, auto_cmd.frame);
-    
+
     if (auto_cmd.cmd_mask & P_CMD_VALID) {
         printf("p: %.2f\n", auto_cmd.p_cmd);
     }

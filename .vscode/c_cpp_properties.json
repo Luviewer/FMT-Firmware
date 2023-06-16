@@ -3,7 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/rtos/**",
+                "${workspaceFolder}/src/**",
+                "${workspaceFolder}/target/tsdpilot/pdu_s4/**"
             ],
             "defines": [
                 "_DEBUG",

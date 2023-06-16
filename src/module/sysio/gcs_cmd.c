@@ -17,6 +17,7 @@
 #include <firmament.h>
 
 #include "module/utils/ringbuffer.h"
+
 #include <FMS.h>
 
 #undef LOG_TAG
@@ -148,7 +149,7 @@ fmt_err_t gcs_set_mode(PilotMode mode)
     if ((fms_out.mode == PilotMode_Mission || fms_out.mode == PilotMode_Offboard)
         && fms_out.mode == mode && fms_out.state == VehicleState_Hold) {
         /* When vehicle is in auto mode (mission,offboard), reset the mode would trigger FMS_Cmd_Continue.
-           e.g, When mission is paused, the vehicle would enter hold mode (state = VehicleState_Hold), 
+           e.g, When mission is paused, the vehicle would enter hold mode (state = VehicleState_Hold),
            however, the mode is still PilotMode_Mission, so the mode would not change when user try
            to set mode to Mission and continue. Therefore, we send FMS_Cmd_Continue instead to continue
            the mission mode. */

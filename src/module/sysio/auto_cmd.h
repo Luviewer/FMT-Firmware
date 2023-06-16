@@ -17,7 +17,9 @@
 #ifndef AUTO_CMD_H__
 #define AUTO_CMD_H__
 
-#include <FMS.h>
+#ifndef FMT_Periph
+    #include <FMS.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
