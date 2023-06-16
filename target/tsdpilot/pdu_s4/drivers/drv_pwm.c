@@ -25,9 +25,9 @@
 #define PWM_FREQ_250HZ (250)
 #define PWM_FREQ_400HZ (400)
 
-#define MAX_PWM_OUT_CHAN      6             // AUX Out has 6 pwm channel
-#define TIMER_FREQUENCY       3000000       // Timer frequency: 3M
-#define PWM_DEFAULT_FREQUENCY PWM_FREQ_50HZ // pwm default frequqncy
+#define MAX_PWM_OUT_CHAN      6              // AUX Out has 6 pwm channel
+#define TIMER_FREQUENCY       3000000        // Timer frequency: 3M
+#define PWM_DEFAULT_FREQUENCY PWM_FREQ_400HZ // pwm default frequqncy
 #define VAL_TO_DC(_val)       ((float)(_val * _pwm_freq) / 1000000.0f)
 #define DC_TO_VAL(_dc)        (1000000.0f / _pwm_freq * _dc)
 
@@ -105,7 +105,7 @@ static void _pwm_timer_init(void)
     PrescalerValue = (uint16_t)((rcc_clocks.PCLK2_Frequency * 2 / TIMER_FREQUENCY) - 1);
 
     /* Time base configuration */
-    TIM_TimeBaseStructure.TIM_Period = PWM_ARR(_pwm_freq) - 1; //PWM Frequency = 3M/60K = 50 Hz
+    TIM_TimeBaseStructure.TIM_Period = PWM_ARR(_pwm_freq) - 1; // PWM Frequency = 3M/60K = 50 Hz
     TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -134,7 +134,7 @@ static void _pwm_timer_init(void)
     TIM_OC4PreloadConfig(TIM1, TIM_OCPreload_Enable);
 
     TIM_ARRPreloadConfig(TIM1, ENABLE);
-    //TIM_Cmd(TIM1, ENABLE);
+    // TIM_Cmd(TIM1, ENABLE);
 
     /* TIM4CLK = 2 * PCLK1 */
     /* PCLK1 = HCLK / 4 */
@@ -150,7 +150,7 @@ static void _pwm_timer_init(void)
     TIM_OC3PreloadConfig(TIM4, TIM_OCPreload_Enable);
 
     TIM_ARRPreloadConfig(TIM4, ENABLE);
-    //TIM_Cmd(TIM4, ENABLE);
+    // TIM_Cmd(TIM4, ENABLE);
 }
 
 rt_inline void _pwm_write(uint8_t chan_id, float duty_cyc);
