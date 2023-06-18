@@ -38,10 +38,7 @@
 #include "driver/vision_flow/mtf_01.h"
 #include "drv_adc.h"
 #include "drv_gpio.h"
-#include "drv_i2c_soft.h"
 #include "drv_pwm.h"
-#include "drv_sdio.h"
-#include "drv_spi.h"
 #include "drv_systick.h"
 #include "drv_usart.h"
 #include "drv_usbd_cdc.h"
@@ -148,7 +145,7 @@ static void bsp_show_information(void)
 
 /**
  * @brief Enable on-board device power supply
- * 
+ *
  */
 static void EnablePower(void)
 {

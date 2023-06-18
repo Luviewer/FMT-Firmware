@@ -20,19 +20,20 @@
 // #define DRV_DBG(...) console_printf(__VA_ARGS__)
 #define DRV_DBG(...)
 
-#define PWM_FREQ_50HZ  (50)
-#define PWM_FREQ_125HZ (125)
-#define PWM_FREQ_250HZ (250)
-#define PWM_FREQ_400HZ (400)
+#define PWM_FREQ_50HZ    (50)
+#define PWM_FREQ_125HZ   (125)
+#define PWM_FREQ_250HZ   (250)
+#define PWM_FREQ_400HZ   (400)               // 2.5ms
+#define PWM_FREQ_1000kHZ (1000000)           // 1us
 
 #define MAX_PWM_OUT_CHAN      6              // AUX Out has 6 pwm channel
-#define TIMER_FREQUENCY       3000000        // Timer frequency: 3M
+#define TIMER_FREQUENCY       6000000        // Timer frequency: 6MHz
 #define PWM_DEFAULT_FREQUENCY PWM_FREQ_400HZ // pwm default frequqncy
 #define VAL_TO_DC(_val)       ((float)(_val * _pwm_freq) / 1000000.0f)
 #define DC_TO_VAL(_dc)        (1000000.0f / _pwm_freq * _dc)
 
 #define PWM_ARR(freq) (TIMER_FREQUENCY / freq) // CCR reload value, Timer frequency = 3M/60K = 50 Hz
-#define PWM_TIMER(id) (id < 4 ? TIM1 : TIM4)
+#define PWM_TIMER(id) (id < 4 ? TIM2 : TIM4)
 
 static int _pwm_freq = PWM_DEFAULT_FREQUENCY;
 static float _pwm_fmu_duty_cyc[MAX_PWM_OUT_CHAN] = { 0.00, 0.00, 0.00, 0.00, 0.00, 0.00 };
@@ -43,54 +44,54 @@ timer_func _timer_set_compare[MAX_PWM_OUT_CHAN] = {
     TIM_SetCompare3,
     TIM_SetCompare2,
     TIM_SetCompare1,
+    TIM_SetCompare1,
     TIM_SetCompare2,
-    TIM_SetCompare3
 };
 
 static void _pwm_gpio_init(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
-    /* TIM1 clock enable */
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+    /* TIM2 clock enable */
+    RCC_APB2PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 
-    /* GPIOE clock enable */
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+    /* GPIOA clock enable */
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
 
-    /* TIM1 CH1 (PE9,FMU_CH4), TIM1 CH2 (PE11,FMU_CH3), TIM1 CH3 (PE13,FMU_CH2) and TIM1 CH4 (PE14,FMU_CH1) */
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_11 | GPIO_Pin_13 | GPIO_Pin_14;
+    /* TIM2 */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-    GPIO_Init(GPIOE, &GPIO_InitStructure);
-
-    /* Connect TIM1 pins to AF */
-    GPIO_PinAFConfig(GPIOE, GPIO_PinSource9, GPIO_AF_TIM1);
-    GPIO_PinAFConfig(GPIOE, GPIO_PinSource11, GPIO_AF_TIM1);
-    GPIO_PinAFConfig(GPIOE, GPIO_PinSource13, GPIO_AF_TIM1);
-    GPIO_PinAFConfig(GPIOE, GPIO_PinSource14, GPIO_AF_TIM1);
-
-    /* TIM4 clock enable */
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
-
-    /* GPIOE clock enable */
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-
-    /* TIM4 CH2 (PD13,FMU_CH5), TIM4 CH3 (PD14,FMU_CH6) */
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-    GPIO_Init(GPIOD, &GPIO_InitStructure);
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
 
     /* Connect TIM4 pins to AF */
-    GPIO_PinAFConfig(GPIOD, GPIO_PinSource13, GPIO_AF_TIM4);
-    GPIO_PinAFConfig(GPIOD, GPIO_PinSource14, GPIO_AF_TIM4);
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource0, GPIO_AF_TIM2);
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM2);
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_TIM2);
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_TIM2);
+
+    /* TIM4 clock enable */
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+
+    /* GPIOB clock enable */
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+
+    /* TIM4 */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+    /* Connect TIM4 pins to AF */
+    GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_TIM4);
+    GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_TIM4);
 }
 
-static void _pwm_timer_init(void)
+static void _pwm_timer_init(uint32_t _pwm_freq)
 {
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
     TIM_OCInitTypeDef TIM_OCInitStructure;
@@ -101,7 +102,7 @@ static void _pwm_timer_init(void)
     /* PCLK2 = HCLK / 2 */
     RCC_GetClocksFreq(&rcc_clocks);
 
-    /* Compute the prescaler value, TIM1 frequency = 3M Hz */
+    /* Compute the prescaler value, TIM4 frequency = 6MHz */
     PrescalerValue = (uint16_t)((rcc_clocks.PCLK2_Frequency * 2 / TIMER_FREQUENCY) - 1);
 
     /* Time base configuration */
@@ -110,9 +111,9 @@ static void _pwm_timer_init(void)
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 
-    TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
+    TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 
-    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM2;
     TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
     TIM_OCInitStructure.TIM_Pulse = 0;
     TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
@@ -121,19 +122,19 @@ static void _pwm_timer_init(void)
     TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
     TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCIdleState_Reset;
 
-    TIM_OC1Init(TIM1, &TIM_OCInitStructure);
-    TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);
+    TIM_OC1Init(TIM2, &TIM_OCInitStructure);
+    TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Enable);
 
-    TIM_OC2Init(TIM1, &TIM_OCInitStructure);
-    TIM_OC2PreloadConfig(TIM1, TIM_OCPreload_Enable);
+    TIM_OC2Init(TIM2, &TIM_OCInitStructure);
+    TIM_OC2PreloadConfig(TIM2, TIM_OCPreload_Enable);
 
-    TIM_OC3Init(TIM1, &TIM_OCInitStructure);
-    TIM_OC3PreloadConfig(TIM1, TIM_OCPreload_Enable);
+    TIM_OC3Init(TIM2, &TIM_OCInitStructure);
+    TIM_OC3PreloadConfig(TIM2, TIM_OCPreload_Enable);
 
-    TIM_OC4Init(TIM1, &TIM_OCInitStructure);
-    TIM_OC4PreloadConfig(TIM1, TIM_OCPreload_Enable);
+    TIM_OC4Init(TIM2, &TIM_OCInitStructure);
+    TIM_OC4PreloadConfig(TIM2, TIM_OCPreload_Enable);
 
-    TIM_ARRPreloadConfig(TIM1, ENABLE);
+    TIM_ARRPreloadConfig(TIM2, ENABLE);
     // TIM_Cmd(TIM1, ENABLE);
 
     /* TIM4CLK = 2 * PCLK1 */
@@ -143,11 +144,11 @@ static void _pwm_timer_init(void)
 
     TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
 
+    TIM_OC1Init(TIM4, &TIM_OCInitStructure);
+    TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);
+
     TIM_OC2Init(TIM4, &TIM_OCInitStructure);
     TIM_OC2PreloadConfig(TIM4, TIM_OCPreload_Enable);
-
-    TIM_OC3Init(TIM4, &TIM_OCInitStructure);
-    TIM_OC3PreloadConfig(TIM4, TIM_OCPreload_Enable);
 
     TIM_ARRPreloadConfig(TIM4, ENABLE);
     // TIM_Cmd(TIM4, ENABLE);
@@ -156,14 +157,14 @@ static void _pwm_timer_init(void)
 rt_inline void _pwm_write(uint8_t chan_id, float duty_cyc);
 rt_err_t _pwm_set_frequency(uint16_t freq_to_set)
 {
-    if (freq_to_set < PWM_FREQ_50HZ || freq_to_set > PWM_FREQ_400HZ) {
-        /* invalid frequency */
-        return RT_EINVAL;
-    }
+    // if (freq_to_set < PWM_FREQ_50HZ || freq_to_set > PWM_FREQ_400HZ) {
+    //     /* invalid frequency */
+    //     return RT_EINVAL;
+    // }
 
     _pwm_freq = freq_to_set;
 
-    _pwm_timer_init();
+    _pwm_timer_init(_pwm_freq);
 
     /* the timer compare value should be re-configured */
     for (uint8_t i = 0; i < MAX_PWM_OUT_CHAN; i++) {
@@ -209,15 +210,13 @@ rt_err_t pwm_control(actuator_dev_t dev, int cmd, void* arg)
             _pwm_write(i, VAL_TO_DC(1000));
         }
 
-        TIM_Cmd(TIM1, ENABLE);
-        TIM_CtrlPWMOutputs(TIM1, ENABLE);
+        TIM_Cmd(TIM2, ENABLE);
         TIM_Cmd(TIM4, ENABLE);
 
         DRV_DBG("aux out enabled\n");
         break;
     case ACT_CMD_CHANNEL_DISABLE:
-        TIM_Cmd(TIM1, DISABLE);
-        TIM_CtrlPWMOutputs(TIM1, DISABLE);
+        TIM_Cmd(TIM2, DISABLE);
         TIM_Cmd(TIM4, DISABLE);
 
         DRV_DBG("aux out disabled\n");
