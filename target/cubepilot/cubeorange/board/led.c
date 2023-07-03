@@ -23,6 +23,9 @@ static rt_device_t pin_dev;
 
 static rt_device_t rgb_led_dev;
 
+static uint8_t cur_rgb_color;
+static uint8_t last_rgb_color;
+
 static void run_led(void* parameter)
 {
     LED_TOGGLE(FMU_LED_RED_PIN);
@@ -71,6 +74,8 @@ static struct WorkItem led_item = {
 
 static void run_rgb_led(void* parameter)
 {
+    static uint8_t set_color_count = 0;
+
     static int bright = 0;
     static int inc = 0;
     static int max_bright = 16;
@@ -96,7 +101,18 @@ static void run_rgb_led(void* parameter)
             inc = -1;
 
         bright += inc;
+
         rgb_led_set_bright(bright);
+    }
+
+    set_color_count++;
+
+    if (set_color_count >= 100) {
+        set_color_count = 0;
+        rgb_led_set_color(last_rgb_color);
+    } else if (set_color_count >= 50) {
+        last_rgb_color = cur_rgb_color;
+        rgb_led_set_color(0xff);
     }
 }
 
@@ -135,6 +151,11 @@ fmt_err_t rgb_led_set_color(uint32_t color)
     if (rt_device_control(rgb_led_dev, DRONECAN_CMD_SET_COLOR, (void*)color) != RT_EOK) {
         return FMT_ERROR;
     }
+
+    if(color == 0xff)
+        return FMT_EOK;
+
+    cur_rgb_color = color;
 
     return FMT_EOK;
 }
@@ -177,6 +198,12 @@ fmt_err_t led_control_init(void)
     FMT_CHECK(workqueue_schedule_work(lp_wq, &led_item));
 
     /* It's possible that ncp5623c is not connected */
+    for (uint8_t i = 0; i < 10; i++) {
+        if (rt_device_find("can_rgb") == NULL) {
+            sys_msleep(200); /* give some time for rgb led to startup */
+        }
+    }
+
     if (rt_device_find("can_rgb") != NULL) {
         /* configure rgd led */
         rgb_led_dev = rt_device_find("can_rgb");
@@ -184,7 +211,6 @@ fmt_err_t led_control_init(void)
 
         RT_CHECK(rt_device_open(rgb_led_dev, RT_DEVICE_OFLAG_RDWR));
         FMT_CHECK(rgb_led_set_color(DRONECAN_LED_BLUE));
-
         sys_msleep(10); /* give some time for rgb led to startup */
     }
 
