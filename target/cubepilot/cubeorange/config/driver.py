@@ -9,6 +9,7 @@ DRIVERS = [
     'gps/gps_m8n.c',
     'gps/gps_dronecan.c',
     'rgb_led/rgb_dronecan.c',
+    'rgb_led/ncp5623c.c',
     'mtd/ramtron.c',
 ]
 

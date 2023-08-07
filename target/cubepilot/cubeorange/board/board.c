@@ -34,6 +34,7 @@
 #include "driver/mag/ist8310.h"
 #include "driver/mtd/ramtron.h"
 #include "driver/rgb_led/rgb_dronecan.h"
+#include "driver/rgb_led/ncp5623c.h"
 #include "drv_adc.h"
 #include "drv_fdcan.h"
 #include "drv_gpio.h"
@@ -142,12 +143,12 @@ static void bsp_show_information(void)
 
 static fmt_err_t bsp_parse_toml_sysconfig(toml_table_t* root_tab)
 {
-    fmt_err_t err = FMT_EOK;
+    fmt_err_t     err = FMT_EOK;
     toml_table_t* sub_tab;
-    const char* key;
-    const char* raw;
-    char* target;
-    int i;
+    const char*   key;
+    const char*   raw;
+    char*         target;
+    int           i;
 
     if (root_tab == NULL) {
         return FMT_ERROR;
@@ -232,8 +233,6 @@ static void CPU_CACHE_Enable(void)
 
     /* Enable D-Cache */
     // SCB_EnableDCache();
-
-
 }
 
 /**
@@ -333,6 +332,7 @@ void SystemClock_Config(void)
     LL_RCC_SetUSARTClockSource(LL_RCC_USART234578_CLKSOURCE_PCLK1);
     LL_RCC_SetFDCANClockSource(LL_RCC_FDCAN_CLKSOURCE_PLL1Q);
     LL_RCC_SetUSBClockSource(LL_RCC_USB_CLKSOURCE_PLL3Q);
+    LL_RCC_SetI2CClockSource(LL_RCC_I2C123_CLKSOURCE_PCLK1);
 
     __HAL_RCC_D2SRAM1_CLK_ENABLE();
     __HAL_RCC_D2SRAM2_CLK_ENABLE();
@@ -421,7 +421,6 @@ void bsp_initialize(void)
     /* adc driver init */
     RT_CHECK(drv_adc_init());
 
-    /* ist8310 and ncp5623c are on gps module and possibly it is not connected */
     drv_rgb_dronecan_init("fdcan1");
 
 #if defined(FMT_USING_SIH) || defined(FMT_USING_HIL)
@@ -436,6 +435,8 @@ void bsp_initialize(void)
     RT_CHECK(drv_icm20948_init("spi4_dev2", "gyro1", "accel1", "mag0"));
     RT_CHECK(drv_ms5611_init("spi1_dev2", "barometer"));
     RT_CHECK(gps_dronecan_init("fdcan1", "can_gps"));
+
+    // RT_CHECK(gps_m8n_init("serial2", "gps"));
 
     // // /* register sensor to sensor hub */
     FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));

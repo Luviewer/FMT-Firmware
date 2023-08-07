@@ -24,7 +24,7 @@ extern "C" {
 
 /* i2c slave device addresses */
 #define IST8310_ADDRESS  0x0E
-#define NCP5623C_ADDRESS 0x39
+#define PCA9685_ADDRESS 0x40
 
 rt_err_t drv_i2c_init(void);
 

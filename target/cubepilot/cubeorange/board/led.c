@@ -63,16 +63,16 @@ fmt_err_t led_init(struct device_pin_mode pin_mode)
 }
 
 static struct WorkItem led_item = {
-    .name = "led",
-    .period = 1000,
+    .name          = "led",
+    .period        = 1000,
     .schedule_time = 0,
-    .run = run_led
+    .run           = run_led
 };
 
 static void run_rgb_led(void* parameter)
 {
-    static int bright = 0;
-    static int inc = 0;
+    static int bright     = 0;
+    static int inc        = 0;
     static int max_bright = 16;
     static int min_bright = 0;
     DEFINE_TIMETAG(rgb_led, 0);
@@ -153,10 +153,10 @@ fmt_err_t rgb_led_set_bright(uint32_t bright)
 }
 
 static struct WorkItem rgb_led_item = {
-    .name = "rgb_led",
-    .period = 10,
+    .name          = "rgb_led",
+    .period        = 10,
     .schedule_time = 0,
-    .run = run_rgb_led
+    .run           = run_rgb_led
 };
 
 fmt_err_t led_control_init(void)
@@ -187,6 +187,18 @@ fmt_err_t led_control_init(void)
 
         sys_msleep(10); /* give some time for rgb led to startup */
     }
+
+    /* It's possible that ncp5623c is not connected */
+    // if (rt_device_find("ncp5623c") != NULL) {
+    //     /* configure rgd led */
+    //     rgb_led_dev = rt_device_find("ncp5623c");
+    //     RT_ASSERT(rgb_led_dev != NULL);
+
+    //     RT_CHECK(rt_device_open(rgb_led_dev, RT_DEVICE_OFLAG_RDWR));
+    //     FMT_CHECK(rgb_led_set_color(NCP5623_LED_BLUE));
+
+    //     sys_msleep(10); /* give some time for rgb led to startup */
+    // }
 
     WorkQueue_t hp_wq = workqueue_find("wq:hp_work");
     RT_ASSERT(hp_wq != NULL);
