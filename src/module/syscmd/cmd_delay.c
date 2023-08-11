@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020 The Firmament Authors. All Rights Reserved.
+ * Copyright 2023 The Firmament Authors. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,23 @@
  * limitations under the License.
  *****************************************************************************/
 
-#ifndef GPS_M8N_H__
-#define GPS_M8N_H__
+#include <firmament.h>
+#include <string.h>
 
-#include <rtthread.h>
+#include "module/syscmd/optparse.h"
+#include "module/syscmd/syscmd.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+int cmd_delay(int argc, char** argv)
+{
+    int res = EXIT_SUCCESS;
 
-rt_err_t gps_m8n_init(const char* serial_device_name, const char* gps_device_name);
+    if (argc < 2) {
+        printf("usage: delay <ms>\n");
+        return EXIT_FAILURE;
+    }
 
-#ifdef __cplusplus
+    systime_mdelay(atoi(argv[1]));
+
+    return res;
 }
-#endif
-
-#endif /* GPS_M8N_H__ */
+FINSH_FUNCTION_EXPORT_ALIAS(cmd_delay, __cmd_delay, Delay for a period of time (ms).);

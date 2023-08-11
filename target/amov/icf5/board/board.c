@@ -25,13 +25,14 @@
 #include "driver/airspeed/ms4525.h"
 #include "driver/barometer/ms5611.h"
 #include "driver/barometer/spl06.h"
-#include "driver/gps/gps_m8n.h"
+#include "driver/gps/gps_ubx.h"
 #include "driver/imu/bmi088.h"
 #include "driver/imu/icm20948.h"
 #include "driver/imu/icm42688p.h"
 #include "driver/mag/bmm150.h"
 #include "driver/mtd/w25qxx.h"
 #include "driver/rgb_led/aw2023.h"
+#include "driver/uwb/nlink_linktrack/nlink_linktrack.h"
 #include "driver/vision_flow/mtf_01.h"
 #include "drv_adc.h"
 #include "drv_buzzer.h"
@@ -322,8 +323,8 @@ void bsp_initialize(void)
     RT_CHECK(drv_spl06_init("spi0_dev3", "barometer"));
 
     drv_mtf_01_init("serial3");
-
-    RT_CHECK(gps_m8n_init("serial4", "gps"));
+    // drv_nlink_linktrack_init("serial4");
+    RT_CHECK(gps_ubx_init("serial4", "gps"));
 
     /* register sensor to sensor hub */
     FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));
@@ -334,6 +335,8 @@ void bsp_initialize(void)
     FMT_CHECK(advertise_sensor_rangefinder(0));
 
     if (strcmp(STR(VEHICLE_TYPE), "Fixwing") == 0) {
+        // FMT_CHECK(advertise_sensor_airspeed(0));
+        // RT_CHECK(drv_ms4525_init("i2c0_dev1", NULL));
         RT_CHECK(drv_ms4525_init("i2c0_dev1", "airspeed"));
         FMT_CHECK(register_sensor_airspeed("airspeed"));
     }

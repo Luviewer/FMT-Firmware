@@ -27,7 +27,7 @@
 #include "board_device.h"
 // #include "driver/barometer/ms5611.h"
 #include "driver/barometer/spl06.h"
-#include "driver/gps/gps_m8n.h"
+#include "driver/gps/gps_ubx.h"
 // #include "driver/imu/bmi055.h"
 #include "driver/imu/bmi088.h"
 // #include "driver/imu/icm20600.h"
@@ -478,7 +478,7 @@ void bsp_initialize(void)
         FMT_CHECK(register_sensor_mag("mag0", 0));
     }
 
-    if (gps_m8n_init("serial1", "gps") != FMT_EOK) {
+    if (gps_ubx_init("serial1", "gps") != FMT_EOK) {
         console_println("gps serial1 faild~!!!!");
     }
 

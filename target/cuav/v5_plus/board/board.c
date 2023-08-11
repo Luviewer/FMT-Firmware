@@ -28,7 +28,7 @@
 #include "board_device.h"
 #include "driver/airspeed/ms4525.h"
 #include "driver/barometer/ms5611.h"
-#include "driver/gps/gps_m8n.h"
+#include "driver/gps/gps_ubx.h"
 #include "driver/imu/bmi055.h"
 #include "driver/imu/icm20689.h"
 #include "driver/mag/ist8310.h"
@@ -435,7 +435,7 @@ void bsp_initialize(void)
         RT_CHECK(drv_ist8310_init("i2c3_dev1", "mag0"));
     }
     RT_CHECK(drv_mtf_01_init("serial6"));
-    RT_CHECK(gps_m8n_init("serial3", "gps"));
+    RT_CHECK(gps_ubx_init("serial3", "gps"));
 
     /* register sensor to sensor hub */
     FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));

@@ -14,42 +14,19 @@
  * limitations under the License.
  *****************************************************************************/
 
-#ifndef FMTCONFIG_H__
-#define FMTCONFIG_H__
+#ifndef GPS_MBX_H__
+#define GPS_MBX_H__
 
-#define FMT_USING_CHECKED
+#include <rtthread.h>
 
-/* HIL simulation */
-// #define FMT_USING_HIL
-/* SIH simulation */
-// #define FMT_USING_SIH
-
-/* Mavlink */
-#define FMT_USING_MAVLINK_V2
-
-/* Send out pilot cmd via mavlink */
-#define FMT_OUTPUT_PILOT_CMD
-
-/* MLog */
-#define MLOG_BUFFER_SIZE         15 * 1024
-#define MLOG_SECTOR_SIZE         4096
-#define MLOG_MAX_SECTOR_TO_WRITE 5
-
-/* ULog */
-#define FMT_USING_ULOG
-#ifdef FMT_USING_ULOG
-    // #define ENABLE_ULOG_FS_BACKEND
-    #define ENABLE_ULOG_CONSOLE_BACKEND
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-/* Cortex-M Backtrace */
-#define FMT_USING_CM_BACKTRACE
+rt_err_t gps_ubx_init(const char* serial_device_name, const char* gps_device_name);
 
-/* Unit Test */
-// #define FMT_USING_UNIT_TEST
-
-// #define FMT_RECORD_CALIBRATION_DATA
-
-// #define FMT_USING_SYS_DEBUG
-
+#ifdef __cplusplus
+}
 #endif
+
+#endif /* GPS_UBX_H__ */

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020-2023 The Firmament Authors. All Rights Reserved.
+ * Copyright 2023 The Firmament Authors. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
+#ifndef NLINK_LINKTRACK_H__
+#define NLINK_LINKTRACK_H__
 
 #include <firmament.h>
 
-int cmd_test(int argc, char** argv)
-{
-    /* add your test code here */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-    return 0;
+rt_err_t drv_nlink_linktrack_init(const char* uart_dev_name);
+
+#ifdef __cplusplus
 }
-FINSH_FUNCTION_EXPORT_ALIAS(cmd_test, __cmd_test, user test command);
+#endif
+
+#endif
